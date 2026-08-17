@@ -48,7 +48,7 @@ static struct
 {
   char *str;
   TokenType tok;
-} reservedWords[MAX_RESERVADAS] = {{"sensor", SENSOR}, {"atuador", ATUADOR}, {"porta", PORTA}, {"analogico", ANALOGICO}, {"digital", DIGITAL}, {"se", SE}, {"entao", ENTAO}, {"senao", SENAO}, {"fimse", FIMSE}, {"enquanto", ENQUANTO}, {"fim_enquanto", FIMENQUANTO}, {"ler", LER}, {"escrever", ESCREVER}};
+} reservedWords[MAX_RESERVADAS] = {{"sensor", SENSOR}, {"atuador", ATUADOR}, {"porta", PORTA}, {"analogico", ANALOGICO}, {"digital", DIGITAL}, {"se", SE}, {"entao", ENTAO}, {"senao", SENAO}, {"fim_se", FIMSE}, {"enquanto", ENQUANTO}, {"fim_enquanto", FIMENQUANTO}, {"ler", LER}, {"escrever", ESCREVER}};
 
 static TokenType reservedLookup(char *s)
 {
@@ -74,10 +74,11 @@ TokenType getToken(void)
     case START:
       if (isdigit(ch))
         state = INNUM;
-      else if (isalpha(ch))
+      else if (isalpha(ch) || ch == '_')
         state = INID;
       else if (ch == '/')
       {
+        save = FALSE;
         state = INBARRACOMMENT;
         break;
       }
@@ -112,6 +113,12 @@ TokenType getToken(void)
           save = FALSE;
           currentToken = ENDFILE;
           break;
+        case '.':
+          currentToken = PONTO;
+          break;
+        case ',':
+          currentToken = VIRGULA;
+          break;
         case '+':
           currentToken = MAIS;
           break;
@@ -144,6 +151,7 @@ TokenType getToken(void)
       if (ch == '*')
       {
         state = INCOMMENT;
+        break;
       }
       else
       {
@@ -254,7 +262,7 @@ TokenType getToken(void)
       }
       break;
     case INID:
-      if (!isalpha(ch))
+      if (!isalnum(ch) && ch != '_')
       {
         ungetNextChar();
         save = FALSE;

@@ -11,9 +11,15 @@ extern char tokenString[MAX_TOKEN_LENGTH + 1];
 /* a funcao getToken retorna o próximo token do input */
 TokenType getToken(void);
 
-typedef enum {
+typedef enum
+{
   START,
-  INASSIGN,
+  INBARRACOMMENT,
+  INASTERISCOCOMMENT,
+  INMAIOR,
+  INMENOR,
+  INEXCLAMACAO,
+  INIGUAL,
   INCOMMENT,
   INNUM,
   INID,

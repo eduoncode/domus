@@ -38,6 +38,27 @@ static int getNextChar(void)
   }
 }
 
+static void ungetNextChar(void)
+{
+  if (!EOF_flag)
+    linepos--;
+}
+
+static struct
+{
+  char *str;
+  TokenType tok;
+} reservedWords[MAX_RESERVADAS] = {{"sensor", SENSOR}, {"atuador", ATUADOR}, {"porta", PORTA}, {"analogico", ANALOGICO}, {"digital", DIGITAL}, {"se", SE}, {"entao", ENTAO}, {"senao", SENAO}, {"fimse", FIMSE}, {"enquanto", ENQUANTO}, {"fim_enquanto", FIMENQUANTO}, {"ler", LER}, {"escrever", ESCREVER}};
+
+static TokenType reservedLookup(char *s)
+{
+  int i;
+  for (i = 0; i < MAX_RESERVADAS; i++)
+    if (!strcmp(s, reservedWords[i].str))
+      return reservedWords[i].tok;
+  return ID;
+}
+
 TokenType getToken(void)
 {
   int tokenStringIndex = 0;
@@ -51,24 +72,37 @@ TokenType getToken(void)
     switch (state)
     {
     case START:
-      if (isDigit(ch))
+      if (isdigit(ch))
         state = INNUM;
       else if (isalpha(ch))
         state = INID;
-      else if (ch == ':')
-        state = INASSIGN;
+      else if (ch == '/')
+      {
+        state = INBARRACOMMENT;
+        break;
+      }
+      else if (ch == '>')
+      {
+        state = INMAIOR;
+        break;
+      }
+      else if (ch == '<')
+      {
+        state = INMENOR;
+        break;
+      }
+      else if (ch == '!')
+      {
+        state = INEXCLAMACAO;
+        break;
+      }
+      else if (ch == '=')
+      {
+        state = INIGUAL;
+        break;
+      }
       else if ((ch == ' ') || (ch == '\t') || (ch == '\n'))
         save = FALSE;
-      else if (ch == '*')
-      {
-        char nextChar = getNextChar();
-        if (nextChar == '/')
-        {
-          save = FALSE;
-          state = INCOMMENT;
-        }
-        return;
-      }
       else
       {
         state = DONE;
@@ -77,12 +111,6 @@ TokenType getToken(void)
         case EOF:
           save = FALSE;
           currentToken = ENDFILE;
-          break;
-        case '=':
-          currentToken = IGUAL;
-          break;
-        case '<':
-          currentToken = MENOR_QUE;
           break;
         case '+':
           currentToken = MAIS;
@@ -93,14 +121,17 @@ TokenType getToken(void)
         case '*':
           currentToken = MULT;
           break;
+        case ':':
+          currentToken = DOISPONTOS;
+          break;
         case '/':
           currentToken = BARRA;
           break;
         case '(':
-          currentToken = ABRE_PARENTESE;
+          currentToken = ABREPARENTESE;
           break;
         case ')':
-          currentToken = FECHA_PARENTESE;
+          currentToken = FECHAPARENTESE;
           break;
         default:
           currentToken = ERROR;
@@ -108,6 +139,20 @@ TokenType getToken(void)
         }
       }
       break;
+    case INBARRACOMMENT:
+      state = DONE;
+      if (ch == '*')
+      {
+        state = INCOMMENT;
+      }
+      else
+      {
+        ungetNextChar();
+        save = FALSE;
+        currentToken =
+            BARRA;
+        break;
+      }
     case INCOMMENT:
       save = FALSE;
       if (ch == EOF)
@@ -115,26 +160,90 @@ TokenType getToken(void)
         state = DONE;
         currentToken = ENDFILE;
       }
-      else if (ch == '/')
+      else if (ch == '*')
       {
-        char nextChar = getNextChar();
-        if (nextChar == '*')
-        {
-          state = START;
-        }
+        state = INASTERISCOCOMMENT;
       }
       break;
-    case INASSIGN:
-      state = DONE;
+    case INASTERISCOCOMMENT:
+      save = FALSE;
+      if (ch == EOF)
+      {
+        state = DONE;
+        currentToken = ENDFILE;
+      }
+      if (ch == '/')
+      {
+        state = START;
+      }
+      else if (ch != '*')
+      {
+        state = INCOMMENT;
+      }
+      break;
+    case INMENOR:
       if (ch == '=')
+      {
+        state = DONE;
+        currentToken = MENORIGUAL;
+        break;
+      }
+      if (ch == '-')
+      {
+        state = DONE;
         currentToken = ATRIBUICAO;
+        break;
+      }
+      else
+      {
+        ungetNextChar();
+        save = FALSE;
+        currentToken =
+            MENORQUE;
+        break;
+      }
+    case INEXCLAMACAO:
+      if (ch == '=')
+      {
+        state = DONE;
+        currentToken = DIFERENTE;
+        break;
+      }
       else
       {
         ungetNextChar();
         save = FALSE;
         currentToken = ERROR;
+        break;
       }
-      break;
+    case INIGUAL:
+      if (ch == '=')
+      {
+        state = DONE;
+        currentToken = IGUAL;
+        break;
+      }
+      else
+      {
+        ungetNextChar();
+        save = FALSE;
+        currentToken = ERROR;
+        break;
+      }
+    case INMAIOR:
+      if (ch == '=')
+      {
+        state = DONE;
+        currentToken = MAIORIGUAL;
+        break;
+      }
+      else
+      {
+        ungetNextChar();
+        save = FALSE;
+        currentToken = MAIORQUE;
+        break;
+      }
     case INNUM:
       if (!isdigit(ch))
       {

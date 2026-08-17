@@ -78,7 +78,6 @@ TokenType getToken(void)
         state = INID;
       else if (ch == '/')
       {
-        save = FALSE;
         state = INBARRACOMMENT;
         break;
       }
@@ -180,8 +179,9 @@ TokenType getToken(void)
         state = DONE;
         currentToken = ENDFILE;
       }
-      if (ch == '/')
+      else if (ch == '/')
       {
+        tokenStringIndex = 0;
         state = START;
       }
       else if (ch != '*')

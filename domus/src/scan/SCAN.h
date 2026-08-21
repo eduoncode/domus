@@ -1,4 +1,4 @@
-#include "tokens.h"
+#include "TOKENS.h"
 
 #ifndef _SCAN_H_
 #define _SCAN_H_
@@ -10,6 +10,7 @@ extern char tokenString[MAX_TOKEN_LENGTH + 1];
 
 /* a funcao getToken retorna o próximo token do input */
 TokenType getToken(void);
+void printToken(TokenType token, const char *lexema);
 
 typedef enum
 {

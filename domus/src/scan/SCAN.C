@@ -1,6 +1,10 @@
-#include "scan.h"
-#include "globals.h"
-#include "tokens.h"
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#include "SCAN.h"
+#include "GLOBALS.h"
+#include "TOKENS.h"
 
 char tokenString[MAX_TOKEN_LENGTH + 1];
 
@@ -206,6 +210,7 @@ TokenType getToken(void)
       {
         ungetNextChar();
         save = FALSE;
+        state = DONE;
         currentToken =
             MENORQUE;
         break;
@@ -221,6 +226,7 @@ TokenType getToken(void)
       {
         ungetNextChar();
         save = FALSE;
+        state = DONE;
         currentToken = ERROR;
         break;
       }
@@ -235,6 +241,7 @@ TokenType getToken(void)
       {
         ungetNextChar();
         save = FALSE;
+        state = DONE;
         currentToken = ERROR;
         break;
       }
@@ -249,6 +256,7 @@ TokenType getToken(void)
       {
         ungetNextChar();
         save = FALSE;
+        state = DONE;
         currentToken = MAIORQUE;
         break;
       }

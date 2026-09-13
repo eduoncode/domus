@@ -6,7 +6,7 @@ Disciplina: Compiladores
 
 Trabalho: Desenvolvimento de um analisador lexico para a linguagem Domus
 
-Integrantes: PREENCHER COM OS NOMES COMPLETOS DO GRUPO
+Integrantes: Eduardo de Oliveira Fernandes, Luiz de Souza Aguiar Passaroni, Maria Fernanda Class Teixeira
 
 ## 1. Lexemas e tokens
 

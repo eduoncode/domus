@@ -48,13 +48,13 @@ static void ungetNextChar(void)
     linepos--;
 }
 
-static struct
+static const struct
 {
-  char *str;
+  const char *str;
   TokenType tok;
 } reservedWords[MAX_RESERVADAS] = {{"sensor", SENSOR}, {"atuador", ATUADOR}, {"porta", PORTA}, {"analogico", ANALOGICO}, {"digital", DIGITAL}, {"se", SE}, {"entao", ENTAO}, {"senao", SENAO}, {"fim_se", FIMSE}, {"enquanto", ENQUANTO}, {"fim_enquanto", FIMENQUANTO}, {"ler", LER}, {"escrever", ESCREVER}};
 
-static TokenType reservedLookup(char *s)
+static TokenType reservedLookup(const char *s)
 {
   int i;
   for (i = 0; i < MAX_RESERVADAS; i++)
@@ -69,6 +69,7 @@ TokenType getToken(void)
   TokenType currentToken;
   StateType state = START;
   int save;
+  int overflow = FALSE;
   while (state != DONE)
   {
     int ch = getNextChar();
@@ -169,7 +170,9 @@ TokenType getToken(void)
       if (ch == EOF)
       {
         state = DONE;
-        currentToken = ENDFILE;
+        currentToken = ERROR;
+        strcpy(tokenString, "comentario_nao_encerrado");
+        tokenStringIndex = strlen(tokenString);
       }
       else if (ch == '*')
       {
@@ -181,7 +184,9 @@ TokenType getToken(void)
       if (ch == EOF)
       {
         state = DONE;
-        currentToken = ENDFILE;
+        currentToken = ERROR;
+        strcpy(tokenString, "comentario_nao_encerrado");
+        tokenStringIndex = strlen(tokenString);
       }
       else if (ch == '/')
       {
@@ -285,12 +290,19 @@ TokenType getToken(void)
       currentToken = ERROR;
       break;
     }
-    if ((save) && (tokenStringIndex <= MAX_TOKEN_LENGTH))
-      tokenString[tokenStringIndex++] = (char)ch;
+    if (save)
+    {
+      if (tokenStringIndex < MAX_TOKEN_LENGTH)
+        tokenString[tokenStringIndex++] = (char)ch;
+      else
+        overflow = TRUE;
+    }
     if (state == DONE)
     {
       tokenString[tokenStringIndex] = '\0';
-      if (currentToken == ID)
+      if (overflow)
+        currentToken = ERROR;
+      else if (currentToken == ID)
         currentToken = reservedLookup(tokenString);
     }
   }

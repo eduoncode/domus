@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500">
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z"/></marker>
+    <style>text{font-family:Arial,sans-serif;font-size:16px}.s{fill:white;stroke:black;stroke-width:2}.f{fill:#e9f6ea;stroke:black;stroke-width:2}.e{fill:none;stroke:black;stroke-width:2;marker-end:url(#a)}</style>
+  </defs>
+  <text x="430" y="30" style="font-size:24px">Automato do analisador lexico Domus</text>
+  <path class="e" d="M25 150 L85 150"/><text x="25" y="135">inicio</text>
+  <circle class="s" cx="130" cy="150" r="42"/><text x="104" y="156">START</text>
+  <path class="e" d="M165 120 L285 70"/><text x="190" y="75">letra ou _</text>
+  <circle class="f" cx="335" cy="60" r="42"/><circle class="f" cx="335" cy="60" r="35"/><text x="315" y="66">ID</text>
+  <path class="e" d="M360 30 C410 5 410 115 360 90"/><text x="390" y="45">letra, digito ou _</text>
+  <path class="e" d="M165 180 L285 230"/><text x="190" y="225">digito</text>
+  <circle class="f" cx="335" cy="235" r="42"/><circle class="f" cx="335" cy="235" r="35"/><text x="305" y="241">NUM</text>
+  <path class="e" d="M165 150 L500 150"/><text x="245" y="140">+ - * . : , ( )</text>
+  <rect class="f" x="510" y="118" width="145" height="64" rx="12"/><text x="528" y="156">TOKEN SIMPLES</text>
+  <path class="e" d="M160 190 L500 320"/><text x="275" y="300">&lt; &gt; ! =</text>
+  <rect class="f" x="510" y="290" width="155" height="64" rx="12"/><text x="525" y="328">OPERADOR FINAL</text>
+  <text x="500" y="380">aceita =; &lt; tambem aceita -</text>
+  <path class="e" d="M150 195 L735 195"/><text x="445" y="185">/</text>
+  <circle class="s" cx="790" cy="195" r="52"/><text x="758" y="201">BARRA</text>
+  <path class="e" d="M825 155 L915 95"/><text x="855" y="112">*</text>
+  <circle class="s" cx="970" cy="75" r="55"/><text x="930" y="81">COMENTARIO</text>
+  <path class="e" d="M1005 115 L1065 185"/><text x="1025" y="150">*</text>
+  <circle class="s" cx="1105" cy="215" r="48"/><text x="1067" y="221">ASTERISCO</text>
+  <path class="e" d="M1068 250 L180 430"/><text x="610" y="350">/ encerra comentario</text>
+  <path class="e" d="M1095 260 L1060 420"/><text x="1080" y="345">EOF</text>
+  <circle class="f" cx="1045" cy="455" r="42"/><circle class="f" cx="1045" cy="455" r="35"/><text x="1020" y="461">ERROR</text>
+  <path class="e" d="M130 195 L130 410"/><text x="145" y="305">fim de arquivo</text>
+  <circle class="f" cx="130" cy="455" r="42"/><circle class="f" cx="130" cy="455" r="35"/><text x="100" y="461">ENDFILE</text>
+</svg>

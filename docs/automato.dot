@@ -1,0 +1,32 @@
+digraph ScannerDomus {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [shape=point];
+  start -> START;
+  START [shape=circle];
+  ID [shape=doublecircle];
+  NUM [shape=doublecircle];
+  SIMPLES [shape=doublecircle, label="token simples"];
+  COMPOSTO [shape=doublecircle, label="token composto"];
+  COMENTARIO [shape=circle];
+  ASTERISCO [shape=circle];
+  ERRO [shape=doublecircle];
+  EOF [shape=doublecircle];
+
+  START -> ID [label="letra ou _"];
+  ID -> ID [label="letra, digito ou _"];
+  START -> NUM [label="digito"];
+  NUM -> NUM [label="digito"];
+  START -> SIMPLES [label="+ - * . : , ( )"];
+  START -> COMPOSTO [label="< > ! ="];
+  START -> COMENTARIO [label="/"];
+  COMENTARIO -> ASTERISCO [label="*"];
+  COMENTARIO -> SIMPLES [label="outro: /"];
+  ASTERISCO -> START [label="/"];
+  ASTERISCO -> ASTERISCO [label="*"];
+  ASTERISCO -> COMENTARIO [label="outro"];
+  COMPOSTO -> COMPOSTO [label="= ou - valido"];
+  START -> EOF [label="fim de arquivo"];
+  COMENTARIO -> ERRO [label="fim de arquivo"];
+  ASTERISCO -> ERRO [label="fim de arquivo"];
+}

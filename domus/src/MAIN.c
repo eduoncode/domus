@@ -1,9 +1,7 @@
 #include <stdlib.h>
 
-#include "globals.h"
+#include "GLOBALS.h"
 #include "SCAN.h"
-
-#define SOURCE_FILE "ExemploDomus.txt"
 
 int lineno = 0;
 FILE *source;
@@ -94,14 +92,22 @@ void printToken(TokenType token, const char *lexema)
   fprintf(listing, "%-16s | %-20s", tokenName(token), lexema[0] != '\0' ? lexema : "-");
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
   TokenType token;
+  const char *sourceFile;
 
-  source = fopen(SOURCE_FILE, "r");
+  if (argc != 2)
+  {
+    fprintf(stderr, "Uso: %s <arquivo-fonte.domus>\n", argv[0]);
+    return EXIT_FAILURE;
+  }
+
+  sourceFile = argv[1];
+  source = fopen(sourceFile, "r");
   if (source == NULL)
   {
-    fprintf(stderr, "Nao foi possivel abrir o arquivo '%s'.\n", SOURCE_FILE);
+    fprintf(stderr, "Nao foi possivel abrir o arquivo '%s'.\n", sourceFile);
     return EXIT_FAILURE;
   }
 

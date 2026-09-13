@@ -1,0 +1,10 @@
+sensor _id1: analogico(porta 123).
+atuador saida: digital(porta 0).
+se (_id1 <= 10) entao
+  _id1 <- _id1 + 1 - 2 * 3 / 4.
+senao
+  escrever(_id1 >= 5).
+fim_se.
+enquanto (_id1 == 0)
+  ler(_id1 != 9).
+fim_enquanto.
